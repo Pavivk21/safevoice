@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Case Timeline</title>
+
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        .box {
+            width: 60%;
+            margin: auto;
+        }
+
+        .log {
+            border-left: 3px solid #2196F3;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Case Timeline: {{ report.case_id }}</h2>
+<hr>
+
+{% for log in logs %}
+
+    <div class="log">
+        <b>{{ log.status }}</b><br>
+        {{ log.note }}<br>
+        <small>{{ log.timestamp }}</small>
+    </div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>

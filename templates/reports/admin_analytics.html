@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Analytics</title>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        /* Cards */
+        .cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            width: 160px;
+            border-radius: 6px;
+            box-shadow: 0 0 5px #ccc;
+            font-size: 18px;
+        }
+
+        /* Charts */
+        canvas {
+            background: white;
+            margin: 20px auto;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px #ccc;
+            max-width: 90%;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1976D2;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h2>Admin Analytics Dashboard 📊</h2>
+
+    <!-- Summary Cards -->
+    <div class="cards">
+
+        <div class="card">Total<br><b>{{ total }}</b></div>
+
+        <div class="card">Submitted<br><b>{{ submitted }}</b></div>
+        <div class="card">Review<br><b>{{ review }}</b></div>
+        <div class="card">Resolved<br><b>{{ resolved }}</b></div>
+
+        <div class="card">High<br><b>{{ high }}</b></div>
+        <div class="card">Medium<br><b>{{ medium }}</b></div>
+        <div class="card">Low<br><b>{{ low }}</b></div>
+
+    </div>
+
+    <hr>
+
+    <!-- Trend -->
+    <h3>Case Trend (Daily) 📈</h3>
+    <canvas id="trendChart" height="120"></canvas>
+
+    <hr>
+
+    <!-- Status -->
+    <h3>Case Status Comparison 📊</h3>
+    <canvas id="statusChart" height="120"></canvas>
+
+    <hr>
+
+    <!-- Severity -->
+    <h3>Severity Comparison ⚠️</h3>
+    <canvas id="severityChart" height="120"></canvas>
+
+    <hr>
+
+    <a href="/dashboard/">
+        <button>Back to Dashboard</button>
+    </a>
+
+</div>
+
+
+<!-- Charts Script -->
+<script>
+
+    /* Django Data (Safe JSON) */
+    const labels = JSON.parse('{{ labels|escapejs }}');
+    const values = JSON.parse('{{ values|escapejs }}');
+
+    const statusData = JSON.parse('{{ status_data|escapejs }}');
+    const severityData = JSON.parse('{{ severity_data|escapejs }}');
+
+
+    /* =========================
+       Trend Line Chart
+    ========================== */
+    new Chart(document.getElementById("trendChart"), {
+
+        type: "line",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: "Cases",
+                data: values,
+                borderColor: "#2196F3",
+                backgroundColor: "rgba(33,150,243,0.2)",
+                fill: true,
+                tension: 0.3
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            onClick: function () {
+                window.location.href = "/dashboard/";
+            }
+        }
+
+    });
+
+
+    /* =========================
+       Status Bar Chart (Clickable)
+    ========================== */
+    new Chart(document.getElementById("statusChart"), {
+
+        type: "bar",
+
+        data: {
+            labels: ["Submitted", "Review", "Resolved"],
+
+            datasets: [{
+                label: "Cases",
+                data: statusData,
+                backgroundColor: [
+                    "#ff9800",
+                    "#03a9f4",
+                    "#4caf50"
+                ]
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            onClick: function (evt, elements) {
+
+                if (elements.length > 0) {
+
+                    const index = elements[0].index;
+
+                    const statuses = ["submitted", "review", "resolved"];
+
+                    const selected = statuses[index];
+
+                    window.location.href =
+                        "/dashboard/?status=" + selected;
+                }
+            }
+        }
+
+    });
+
+
+    /* =========================
+       Severity Bar Chart (Clickable)
+    ========================== */
+    new Chart(document.getElementById("severityChart"), {
+
+        type: "bar",
+
+        data: {
+            labels: ["High", "Medium", "Low"],
+
+            datasets: [{
+                label: "Cases",
+                data: severityData,
+                backgroundColor: [
+                    "#f44336",
+                    "#ff9800",
+                    "#2196f3"
+                ]
+            }]
+        },
+
+        options: {
+            responsive: true,
+
+            onClick: function (evt, elements) {
+
+                if (elements.length > 0) {
+
+                    const index = elements[0].index;
+
+                    const levels = ["high", "medium", "low"];
+
+                    const selected = levels[index];
+
+                    window.location.href =
+                        "/dashboard/?severity=" + selected;
+                }
+            }
+        }
+
+    });
+
+</script>
+
+
+</body>
+</html>
+
+

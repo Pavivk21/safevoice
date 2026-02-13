@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Track Case</title>
+</head>
+<body>
+
+<h2>Track Your Case</h2>
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="case_id" placeholder="Enter Case ID" required>
+
+    <button type="submit">Track</button>
+</form>
+
+<hr>
+
+{% if report %}
+
+    <h3>Status: {{ report.status }}</h3>
+    <p>Category: {{ report.category }}</p>
+
+    <br>
+
+    <!-- Buttons -->
+    <a href="/chat/{{ report.case_id }}/">
+        <button>Open Chat</button>
+    </a>
+
+    <a href="/timeline/{{ report.case_id }}/">
+        <button>View Timeline</button>
+    </a>
+
+{% elif request.method == 'POST' %}
+    <p>No case found.</p>
+{% endif %}
+
+</body>
+</html>
+

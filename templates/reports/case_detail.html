@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Case Details</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f5f5f5;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+        }
+
+        .box {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px 0;
+        }
+
+        h3 {
+            background: #eee;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Case Details 📂</h2>
+
+<!-- Emergency SOS Button -->
+<div style="text-align:center; margin:15px 0;">
+
+    <a href="/sos/{{ report.case_id }}/"
+       style="color:white;
+              background:red;
+              padding:12px 20px;
+              border-radius:6px;
+              font-size:18px;
+              font-weight:bold;
+              text-decoration:none;"
+       onclick="return confirm('Are you in danger? Trigger SOS?')">
+
+       🚨 EMERGENCY SOS
+
+    </a>
+    <!-- Emergency Help Buttons -->
+<div style="text-align:center; margin:15px 0;">
+
+    <button onclick="showHelp()"
+        style="background:#1976d2;color:white;
+               padding:10px 18px;
+               border:none;border-radius:5px;
+               font-size:16px;cursor:pointer;">
+        ☎️ Get Emergency Help
+    </button>
+
+</div>
+
+<!-- Popup -->
+<div id="helpPopup"
+     style="display:none;
+            position:fixed;
+            top:0;left:0;
+            width:100%;height:100%;
+            background:rgba(0,0,0,0.6);">
+
+    <div style="background:white;
+                width:300px;
+                margin:120px auto;
+                padding:20px;
+                border-radius:8px;
+                text-align:center;">
+
+        <h3>🚨 Emergency Contacts</h3>
+
+        <p><b>Police:</b> 112</p>
+        <p><b>Women Helpline:</b> 181</p>
+        <p><b>NGO Support:</b> 1091</p>
+
+        <hr>
+
+        <!-- Call Buttons -->
+        <a href="tel:112">
+            <button>📞 Call Police</button>
+        </a><br><br>
+
+        <a href="tel:181">
+            <button>📞 Call Helpline</button>
+        </a><br><br>
+
+        <a href="tel:1091">
+            <button>📞 Call NGO</button>
+        </a><br><br>
+
+        <button onclick="closeHelp()">Close</button>
+
+    </div>
+</div>
+
+<script>
+function showHelp() {
+    document.getElementById("helpPopup").style.display = "block";
+}
+
+function closeHelp() {
+    document.getElementById("helpPopup").style.display = "none";
+}
+</script>
+
+
+</div>
+
+<hr>
+
+<!-- Basic Info -->
+<div class="box">
+<h3>Basic Information</h3>
+
+<p><b>Case ID:</b> {{ report.case_id }}</p>
+<p><b>Category:</b> {{ report.category }}</p>
+<p><b>Status:</b> {{ report.status }}</p>
+<p><b>Severity:</b> {{ report.severity }}</p>
+<p><b>Confidence:</b> {{ report.confidence_score }}%</p>
+<p><b>Date:</b> {{ report.incident_date }}</p>
+
+</div>
+
+
+<!-- Description -->
+<div class="box">
+<h3>Description</h3>
+
+<p>{{ report.description }}</p>
+</div>
+
+
+<!-- Location -->
+<div class="box">
+<h3>Location</h3>
+
+<p><b>Place:</b> {{ report.location }}</p>
+<p><b>Latitude:</b> {{ report.latitude }}</p>
+<p><b>Longitude:</b> {{ report.longitude }}</p>
+
+<a href="https://www.google.com/maps?q={{ report.latitude }},{{ report.longitude }}"
+   target="_blank">
+   View on Map 🌍
+</a>
+</div>
+
+
+<!-- Evidence -->
+<div class="box">
+<h3>Evidence</h3>
+
+{% if report.evidence %}
+    <a href="{{ report.evidence.url }}" target="_blank">
+        View File 📎
+    </a>
+{% else %}
+    <p>No evidence uploaded.</p>
+{% endif %}
+</div>
+
+
+<!-- Timeline -->
+<div class="box">
+<h3>Case Timeline</h3>
+
+<ul>
+{% for log in logs %}
+    <li>
+        {{ log.timestamp }} - <b>{{ log.status }}</b> ({{ log.note }})
+    </li>
+{% endfor %}
+</ul>
+
+</div>
+
+
+<!-- Chat -->
+<div class="box">
+<h3>Chat History</h3>
+
+{% for msg in messages %}
+    <p>
+        <b>{{ msg.sender }}:</b> {{ msg.text }}
+        <small>({{ msg.timestamp }})</small>
+    </p>
+{% endfor %}
+</div>
+
+
+<br>
+
+<a href="/dashboard/">
+    <button>Back to Dashboard</button>
+</a>
+
+<a href="/pdf/{{ report.case_id }}/">
+    <button>📄 Download PDF</button>
+</a>
+
+
+</div>
+
+</body>
+</html>

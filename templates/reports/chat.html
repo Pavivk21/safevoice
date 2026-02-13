@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anonymous Chat</title>
+
+    <style>
+        body {
+            font-family: Arial;
+        }
+
+        .chat-box {
+            width: 60%;
+            margin: auto;
+            border: 1px solid #ccc;
+            padding: 15px;
+        }
+
+        .user {
+            color: blue;
+            margin: 5px 0;
+        }
+
+        .admin {
+            color: green;
+            margin: 5px 0;
+            text-align: right;
+        }
+
+        .msg {
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2 align="center">Case: {{ report.case_id }}</h2>
+
+<div class="chat-box">
+
+    {% for msg in messages %}
+
+        {% if msg.sender == "user" %}
+            <div class="msg user">
+                <b>User:</b> {{ msg.text }}
+            </div>
+        {% else %}
+            <div class="msg admin">
+                <b>Admin:</b> {{ msg.text }}
+            </div>
+        {% endif %}
+
+    {% endfor %}
+
+</div>
+
+<br>
+
+<form method="POST" align="center">
+    {% csrf_token %}
+
+    <input type="text"
+           name="text"
+           placeholder="Type message"
+           required
+           style="width:40%; padding:5px;">
+
+    <button type="submit">Send</button>
+</form>
+
+</body>
+</html>
+

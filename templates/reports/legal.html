@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Legal Rights</title>
+</head>
+<body>
+
+<h2>Legal Rights for Case {{ report.case_id }}</h2>
+<h3>Detected Issue Type: {{ category|title }}</h3>
+
+<p><b>Category:</b> {{ report.category }}</p>
+
+<hr>
+
+{% if laws %}
+
+<ul>
+{% for law in laws %}
+    <li>
+        <b>{{ law.law }}</b><br>
+        {{ law.desc }}
+    </li><br>
+{% endfor %}
+</ul>
+
+{% else %}
+<p>No legal data available.</p>
+{% endif %}
+
+<br>
+
+<a href="/dashboard/">Back to Dashboard</a>
+
+</body>
+</html>

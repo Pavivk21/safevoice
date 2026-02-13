@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial; }
+        h2 { text-align: center; }
+    </style>
+</head>
+<body>
+
+<h2>SafeVoice Case Report</h2>
+
+<p><b>Case ID:</b> {{ report.case_id }}</p>
+<p><b>Category:</b> {{ report.category }}</p>
+<p><b>Status:</b> {{ report.status }}</p>
+<p><b>Severity:</b> {{ report.severity }}</p>
+<p><b>Location:</b> {{ report.location }}</p>
+<p><b>Description:</b> {{ report.description }}</p>
+
+<hr>
+
+<h3>Timeline</h3>
+
+<ul>
+{% for log in logs %}
+<li>{{ log.timestamp }} - {{ log.status }}</li>
+{% endfor %}
+</ul>
+
+</body>
+</html>

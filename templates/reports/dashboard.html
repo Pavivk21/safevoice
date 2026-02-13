@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        table {
+            width: 95%;
+            margin: auto;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #f2f2f2;
+        }
+
+        .box {
+            width: 90%;
+            margin: auto;
+            text-align: center;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        .summary {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .emergency {
+            color: red;
+            font-weight: bold;
+        }
+
+        select, button {
+            padding: 4px;
+            margin: 2px;
+        }
+
+        .sos-btn {
+            color: red;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .sos-btn:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>SafeVoice Admin Dashboard 📊</h2>
+
+<p class="summary">
+    Total: {{ total }} |
+    High: {{ high }} |
+    Medium: {{ medium }} |
+    Low: {{ low }}
+</p>
+
+<hr>
+
+<table>
+
+<tr>
+    <th>Case ID</th>
+    <th>Category</th>
+    <th>Severity</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+
+{% for r in reports %}
+
+<tr>
+
+    <!-- Case ID -->
+    <td>{{ r.case_id }}</td>
+
+    <!-- Category -->
+    <td>{{ r.category }}</td>
+
+    <!-- Severity -->
+    <td>
+        {% if r.is_emergency %}
+            <span class="emergency">HIGH 🚨</span>
+        {% else %}
+            {{ r.severity|upper }}
+        {% endif %}
+    </td>
+
+    <!-- Status -->
+    <td>
+        {% if r.is_emergency %}
+            <span class="emergency">EMERGENCY</span>
+        {% else %}
+            {{ r.status|upper }}
+        {% endif %}
+    </td>
+
+    <!-- Actions -->
+    <td>
+
+        <!-- Update Form -->
+        <form method="POST" action="/update/{{ r.case_id }}/">
+        {% csrf_token %}
+
+        <!-- Status -->
+        <select name="status">
+
+            <option value="submitted"
+            {% if r.status == "submitted" %}selected{% endif %}>
+            Submitted
+            </option>
+
+            <option value="review"
+            {% if r.status == "review" %}selected{% endif %}>
+            Review
+            </option>
+
+            <option value="investigation"
+            {% if r.status == "investigation" %}selected{% endif %}>
+            Investigation
+            </option>
+
+            <option value="action"
+            {% if r.status == "action" %}selected{% endif %}>
+            Action Taken
+            </option>
+
+            <option value="closed"
+            {% if r.status == "closed" %}selected{% endif %}>
+            Closed
+            </option>
+
+        </select>
+
+
+        <!-- Severity -->
+        <select name="severity">
+
+            <option value="low"
+            {% if r.severity == "low" %}selected{% endif %}>
+            Low
+            </option>
+
+            <option value="medium"
+            {% if r.severity == "medium" %}selected{% endif %}>
+            Medium
+            </option>
+
+            <option value="high"
+            {% if r.severity == "high" %}selected{% endif %}>
+            High
+            </option>
+
+        </select>
+
+
+        <button type="submit">Update</button>
+
+        </form>
+
+        <br>
+
+        <!-- Links -->
+        <a href="/chat/{{ r.case_id }}/">Chat</a> |
+        <a href="/timeline/{{ r.case_id }}/">Timeline</a> |
+        <a href="/legal/{{ r.case_id }}/">Legal</a> |
+        <a href="/case/{{ r.case_id }}/">View</a> |
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</body>
+</html>
+

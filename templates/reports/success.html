@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Submitted</title>
+</head>
+<body>
+
+<h2>Report Submitted Successfully ✅</h2>
+
+<p>Your Case ID:</p>
+<h3>{{ case_id }}</h3>
+
+<p>Please save this ID.</p>
+
+<hr>
+
+<!-- Buttons -->
+<a href="/chat/{{ case_id }}/">
+    <button>Open Chat</button>
+</a>
+
+<a href="/timeline/{{ case_id }}/">
+    <button>View Timeline</button>
+</a>
+
+<br><br>
+
+<a href="/">Submit Another Report</a>
+
+</body>
+</html>
+

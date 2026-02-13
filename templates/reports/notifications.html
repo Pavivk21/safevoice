@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Notifications</title>
+</head>
+<body>
+
+<h2>Notifications 📩</h2>
+
+<hr>
+
+{% for n in notes %}
+
+<p>
+🔔 {{ n.message }} <br>
+<small>{{ n.created_at }}</small>
+</p>
+
+<hr>
+
+{% empty %}
+<p>No notifications yet.</p>
+{% endfor %}
+
+<a href="/">Back</a>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SafeVoice - Report</title>
+</head>
+<script>
+navigator.geolocation.getCurrentPosition(function(pos){
+    document.getElementById("lat").value = pos.coords.latitude;
+    document.getElementById("lng").value = pos.coords.longitude;
+});
+</script>
+<body>
+
+<h2>Anonymous Harassment Report</h2>
+
+<hr>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="text" name="category" placeholder="Category" required><br><br>
+
+    <textarea name="description" placeholder="Describe the incident" required></textarea><br><br>
+
+<input type="text" name="location" placeholder="Location" required><br><br>
+<input type="date" name="incident_date" required><br><br>
+<input type="hidden" name="lat" id="lat">
+<input type="hidden" name="lng" id="lng">
+    <button type="submit">Submit Report</button>
+
+</form>
+
+<br>
+<a href="/track/">Track My Case</a>
+
+</body>
+</html>
