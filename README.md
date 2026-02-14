@@ -86,3 +86,22 @@ Clone the repository:
 ```bash
 git clone https://github.com/Pavivk21/safevoice.git
 cd safevoice
+
+## 📸 Screenshots
+
+### Intro Page
+![Intro](docs/screenshots/intro.png)
+
+### Report Form
+![Report Form](docs/screenshots/report_form.png)
+
+### Case Detail with SOS
+![Case Detail](docs/screenshots/case_detail.png)
+
+### Admin Dashboard
+![Admin Dashboard](docs/screenshots/admin_dashboard.png)
+
+### Heatmap
+![Heatmap](docs/screenshots/heatmap.png)
+
+
