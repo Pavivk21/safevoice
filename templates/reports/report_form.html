@@ -1,37 +1,109 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>SafeVoice - Report</title>
-</head>
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container py-5">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <div class="title-icon mb-3">🛡️</div>
+        <h1 class="fw-bold">Safety Report</h1>
+        <p class="text-muted">
+            Your safety matters. Share your experience in a secure and confidential space.
+            Every report helps us create a safer community.
+        </p>
+    </div>
+
+    <!-- Card -->
+    <div class="report-card mx-auto" style="max-width: 750px;">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Category -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Type of Incident *</label>
+                <input type="text" name="category" class="form-control" placeholder="e.g. Harassment, Stalking, Assault" required>
+            </div>
+
+            <!-- Date -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Date *</label>
+                <input type="date" name="incident_date" class="form-control" required>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Location *</label>
+                <input type="text" name="location" class="form-control" placeholder="Street name, landmark, or area" required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">What happened? *</label>
+                <textarea name="description" rows="5" class="form-control"
+                    placeholder="Describe the incident in as much detail as you feel comfortable sharing."
+                    required></textarea>
+                <div class="helper-text mt-2">
+                    This information is confidential and will be handled with care.
+                </div>
+            </div>
+
+            <!-- Hidden Location Fields -->
+            <input type="hidden" name="lat" id="lat">
+            <input type="hidden" name="lng" id="lng">
+
+            <!-- Anonymous Option -->
+            <div class="soft-box mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="anonymousCheck">
+                    <label class="form-check-label fw-semibold" for="anonymousCheck">
+                        Submit anonymously
+                    </label>
+                </div>
+                <div class="helper-text">
+                    Your contact information will not be shared if this is selected.
+                </div>
+            </div>
+
+            <!-- Name -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Your Name (Optional)</label>
+                <input type="text" name="name" class="form-control" placeholder="Enter your name">
+            </div>
+
+            <!-- Contact -->
+            <div class="mb-4">
+                <label class="form-label fw-semibold">Contact Information (Optional)</label>
+                <input type="text" name="email" class="form-control" placeholder="Phone or email for follow-up">
+            </div>
+
+            <!-- Submit Button -->
+            <div class="d-grid">
+                <button type="submit" class="btn submit-btn text-black">
+                    Submit Report Securely
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Emergency Notice -->
+        <div class="soft-box text-center mt-4">
+            Need immediate help? Call emergency services at <strong>112</strong>
+            or contact a local support hotline.
+        </div>
+
+    </div>
+</div>
+
+<!-- Geolocation Script -->
 <script>
 navigator.geolocation.getCurrentPosition(function(pos){
     document.getElementById("lat").value = pos.coords.latitude;
     document.getElementById("lng").value = pos.coords.longitude;
 });
+
 </script>
-<body>
+{% endblock %}
 
-<h2>Anonymous Harassment Report</h2>
 
-<hr>
-
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-
-    <input type="text" name="category" placeholder="Category" required><br><br>
-
-    <textarea name="description" placeholder="Describe the incident" required></textarea><br><br>
-
-<input type="text" name="location" placeholder="Location" required><br><br>
-<input type="date" name="incident_date" required><br><br>
-<input type="hidden" name="lat" id="lat">
-<input type="hidden" name="lng" id="lng">
-    <button type="submit">Submit Report</button>
-
-</form>
-
-<br>
-<a href="/track/">Track My Case</a>
-
-</body>
-</html>

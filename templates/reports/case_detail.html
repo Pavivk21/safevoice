@@ -1,217 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Case Details</title>
+    <meta charset="UTF-8">
+    <title>Case Detail – SafeVoice</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: Arial;
-            background: #f5f5f5;
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F2FF;
         }
 
-        .container {
-            width: 80%;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 6px;
+        .card-soft {
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.08);
         }
 
-        .box {
-            border: 1px solid #ccc;
-            padding: 15px;
-            margin: 10px 0;
+        .severity-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
-        h3 {
-            background: #eee;
-            padding: 5px;
+        .high { background: #FFE5E7; color: #E63946; }
+        .medium { background: #FFF4E5; color: #F4A261; }
+        .low { background: #E8F8EE; color: #4CAF50; }
+
+        .status-badge {
+            background: #EDE9FF;
+            color: #6C63FF;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .btn-purple {
+            background: linear-gradient(90deg, #6C63FF, #8E6CFF);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            padding: 10px 18px;
+            font-weight: 600;
+        }
+
+        .btn-purple:hover {
+            opacity: 0.9;
+        }
+
+        .section-title {
+            font-weight: 600;
+            margin-bottom: 15px;
         }
     </style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="container py-5">
 
-<h2>Case Details 📂</h2>
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Case {{ report.case_id }}</h2>
+            <span class="status-badge">{{ report.status|title }}</span>
+        </div>
 
-<!-- Emergency SOS Button -->
-<div style="text-align:center; margin:15px 0;">
+        <div>
+            {% if report.is_emergency %}
+                <span class="badge bg-danger">🚨 EMERGENCY</span>
+            {% endif %}
+        </div>
+    </div>
 
-    <a href="/sos/{{ report.case_id }}/"
-       style="color:white;
-              background:red;
-              padding:12px 20px;
-              border-radius:6px;
-              font-size:18px;
-              font-weight:bold;
-              text-decoration:none;"
-       onclick="return confirm('Are you in danger? Trigger SOS?')">
+    <!-- Summary Row -->
+    <div class="row g-4 mb-4">
 
-       🚨 EMERGENCY SOS
+        <!-- Basic Info -->
+        <div class="col-md-6">
+            <div class="card card-soft p-4">
+                <h5 class="section-title">Case Information</h5>
 
-    </a>
-    <!-- Emergency Help Buttons -->
-<div style="text-align:center; margin:15px 0;">
+                <p><strong>Category:</strong> {{ report.category }}</p>
 
-    <button onclick="showHelp()"
-        style="background:#1976d2;color:white;
-               padding:10px 18px;
-               border:none;border-radius:5px;
-               font-size:16px;cursor:pointer;">
-        ☎️ Get Emergency Help
-    </button>
+                <p>
+                    <strong>Severity:</strong>
+                    <span class="severity-badge {{ report.severity }}">
+                        {{ report.severity|upper }}
+                    </span>
+                </p>
 
-</div>
+                <p><strong>Confidence:</strong> {{ report.confidence_score }}%</p>
+                <p><strong>Date:</strong> {{ report.incident_date }}</p>
+                <p><strong>Created:</strong> {{ report.created_at }}</p>
+            </div>
+        </div>
 
-<!-- Popup -->
-<div id="helpPopup"
-     style="display:none;
-            position:fixed;
-            top:0;left:0;
-            width:100%;height:100%;
-            background:rgba(0,0,0,0.6);">
+        <!-- Location & Evidence -->
+        <div class="col-md-6">
+            <div class="card card-soft p-4">
+                <h5 class="section-title">Location & Evidence</h5>
 
-    <div style="background:white;
-                width:300px;
-                margin:120px auto;
-                padding:20px;
-                border-radius:8px;
-                text-align:center;">
+                <p><strong>Location:</strong> {{ report.location }}</p>
 
-        <h3>🚨 Emergency Contacts</h3>
+                {% if report.latitude and report.longitude %}
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ report.location|urlencode }}" target="_blank">
+    View on Map 🌍
+</a>
 
-        <p><b>Police:</b> 112</p>
-        <p><b>Women Helpline:</b> 181</p>
-        <p><b>NGO Support:</b> 1091</p>
 
-        <hr>
+                {% endif %}
 
-        <!-- Call Buttons -->
-        <a href="tel:112">
-            <button>📞 Call Police</button>
-        </a><br><br>
+                <hr>
 
-        <a href="tel:181">
-            <button>📞 Call Helpline</button>
-        </a><br><br>
+                <p><strong>Evidence:</strong></p>
 
-        <a href="tel:1091">
-            <button>📞 Call NGO</button>
-        </a><br><br>
-
-        <button onclick="closeHelp()">Close</button>
+                {% if report.evidence %}
+                    <a href="{{ report.evidence.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                        View File
+                    </a>
+                {% else %}
+                    <p class="text-muted">No evidence uploaded.</p>
+                {% endif %}
+            </div>
+        </div>
 
     </div>
-</div>
 
-<script>
-function showHelp() {
-    document.getElementById("helpPopup").style.display = "block";
-}
+    <!-- Description -->
+    <div class="card card-soft p-4 mb-4">
+        <h5 class="section-title">Incident Description</h5>
+        <p>{{ report.description }}</p>
+    </div>
 
-function closeHelp() {
-    document.getElementById("helpPopup").style.display = "none";
-}
-</script>
+    <!-- Quick Actions -->
+    <div class="card card-soft p-4">
+        <h5 class="section-title">Actions</h5>
 
+        <div class="d-flex gap-3 flex-wrap">
+            <a href="/chat/{{ report.case_id }}/" class="btn btn-purple">
+                Open Chat
+            </a>
 
-</div>
+            <a href="/timeline/{{ report.case_id }}/" class="btn btn-outline-secondary">
+                View Timeline
+            </a>
 
-<hr>
+            <a href="/update/{{ report.case_id }}/" class="btn btn-outline-primary">
+                Update Status
+            </a>
 
-<!-- Basic Info -->
-<div class="box">
-<h3>Basic Information</h3>
+            <a href="/legal/{{ report.case_id }}/" class="btn btn-outline-dark">
+                View Legal Guidance
+            </a>
 
-<p><b>Case ID:</b> {{ report.case_id }}</p>
-<p><b>Category:</b> {{ report.category }}</p>
-<p><b>Status:</b> {{ report.status }}</p>
-<p><b>Severity:</b> {{ report.severity }}</p>
-<p><b>Confidence:</b> {{ report.confidence_score }}%</p>
-<p><b>Date:</b> {{ report.incident_date }}</p>
-
-</div>
-
-
-<!-- Description -->
-<div class="box">
-<h3>Description</h3>
-
-<p>{{ report.description }}</p>
-</div>
-
-
-<!-- Location -->
-<div class="box">
-<h3>Location</h3>
-
-<p><b>Place:</b> {{ report.location }}</p>
-<p><b>Latitude:</b> {{ report.latitude }}</p>
-<p><b>Longitude:</b> {{ report.longitude }}</p>
-
-<a href="https://www.google.com/maps?q={{ report.latitude }},{{ report.longitude }}"
-   target="_blank">
-   View on Map 🌍
-</a>
-</div>
-
-
-<!-- Evidence -->
-<div class="box">
-<h3>Evidence</h3>
-
-{% if report.evidence %}
-    <a href="{{ report.evidence.url }}" target="_blank">
-        View File 📎
-    </a>
-{% else %}
-    <p>No evidence uploaded.</p>
-{% endif %}
-</div>
-
-
-<!-- Timeline -->
-<div class="box">
-<h3>Case Timeline</h3>
-
-<ul>
-{% for log in logs %}
-    <li>
-        {{ log.timestamp }} - <b>{{ log.status }}</b> ({{ log.note }})
-    </li>
-{% endfor %}
-</ul>
-
-</div>
-
-
-<!-- Chat -->
-<div class="box">
-<h3>Chat History</h3>
-
-{% for msg in messages %}
-    <p>
-        <b>{{ msg.sender }}:</b> {{ msg.text }}
-        <small>({{ msg.timestamp }})</small>
-    </p>
-{% endfor %}
-</div>
-
-
-<br>
-
-<a href="/dashboard/">
-    <button>Back to Dashboard</button>
+       <a href="{% url 'download_pdf' report.case_id %}" class="btn btn-outline-success">
+    Download PDF
 </a>
 
-<a href="/pdf/{{ report.case_id }}/">
-    <button>📄 Download PDF</button>
-</a>
-
+        </div>
+    </div>
 
 </div>
 
 </body>
 </html>
+

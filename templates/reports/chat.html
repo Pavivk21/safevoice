@@ -1,74 +1,155 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Anonymous Chat</title>
+    <meta charset="UTF-8">
+    <title>SafeVoice Chat</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         body {
-            font-family: Arial;
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F2FF;
         }
 
-        .chat-box {
-            width: 60%;
+        .chat-container {
+            max-width: 800px;
             margin: auto;
-            border: 1px solid #ccc;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+        }
+
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-bubble {
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            max-width: 75%;
+            font-size: 14px;
+        }
+
+        .user-msg {
+            background: linear-gradient(90deg, #6C63FF, #8E6CFF);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .admin-msg {
+            background: #F4F2FF;
+            color: #333;
+            margin-right: auto;
+            border-bottom-left-radius: 4px;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+
+        .chat-input {
             padding: 15px;
+            border-top: 1px solid #eee;
         }
 
-        .user {
-            color: blue;
-            margin: 5px 0;
+        .send-btn {
+            background: #6C63FF;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 600;
         }
 
-        .admin {
-            color: green;
-            margin: 5px 0;
-            text-align: right;
-        }
-
-        .msg {
-            padding: 5px;
-            border-radius: 5px;
+        .send-btn:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
-
 <body>
 
-<h2 align="center">Case: {{ report.case_id }}</h2>
+<div class="container py-5">
 
-<div class="chat-box">
+    <div class="chat-container">
 
-    {% for msg in messages %}
+        <!-- Header -->
+        <div class="chat-header text-center">
+            <h5 class="fw-bold mb-1">Secure Chat</h5>
+            <small class="text-muted">Case ID: {{ report.case_id }}</small>
+        </div>
 
-        {% if msg.sender == "user" %}
-            <div class="msg user">
-                <b>User:</b> {{ msg.text }}
-            </div>
-        {% else %}
-            <div class="msg admin">
-                <b>Admin:</b> {{ msg.text }}
-            </div>
-        {% endif %}
+        <!-- Messages -->
+        <div class="chat-messages">
 
-    {% endfor %}
+            {% for msg in messages %}
+                <div class="d-flex 
+                    {% if msg.sender == 'user' %}
+                        justify-content-end
+                    {% else %}
+                        justify-content-start
+                    {% endif %}
+                ">
+
+                    <div class="chat-bubble 
+                        {% if msg.sender == 'user' %}
+                            user-msg
+                        {% else %}
+                            admin-msg
+                        {% endif %}
+                    ">
+                        {{ msg.text }}
+
+                        <div class="timestamp text-end">
+                            {{ msg.timestamp|date:"M d, H:i" }}
+                        </div>
+                    </div>
+
+                </div>
+            {% empty %}
+                <p class="text-center text-muted">
+                    No messages yet. Start the conversation.
+                </p>
+            {% endfor %}
+
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="text" name="text" class="form-control" placeholder="Type your message..." required>
+                    <button type="submit" class="send-btn">
+                        Send
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
 
 </div>
 
-<br>
-
-<form method="POST" align="center">
-    {% csrf_token %}
-
-    <input type="text"
-           name="text"
-           placeholder="Type message"
-           required
-           style="width:40%; padding:5px;">
-
-    <button type="submit">Send</button>
-</form>
-
 </body>
 </html>
+
 

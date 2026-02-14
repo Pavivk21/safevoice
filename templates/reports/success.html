@@ -1,31 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Submitted</title>
+    <meta charset="UTF-8">
+    <title>Report Submitted – SafeVoice</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F2FF;
+        }
+
+        .success-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 40px;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.08);
+        }
+
+        .success-icon {
+            background: #EDE9FF;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #6C63FF;
+            margin: auto;
+        }
+
+        .case-id-box {
+            background: #F4F2FF;
+            border-radius: 12px;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #6C63FF;
+        }
+
+        .primary-btn {
+            background: linear-gradient(90deg, #6C63FF, #8E6CFF);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            font-weight: 600;
+        }
+
+        .outline-btn {
+            border-radius: 12px;
+            padding: 12px 20px;
+        }
+
+        .helper-text {
+            font-size: 14px;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
 
-<h2>Report Submitted Successfully ✅</h2>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
 
-<p>Your Case ID:</p>
-<h3>{{ case_id }}</h3>
+    <div class="success-card text-center" style="max-width: 650px; width: 100%;">
 
-<p>Please save this ID.</p>
+        <!-- Icon -->
+        <div class="success-icon mb-4">
+            ✔
+        </div>
 
-<hr>
+        <!-- Title -->
+        <h2 class="fw-bold mb-3">Report Submitted Successfully</h2>
 
-<!-- Buttons -->
-<a href="/chat/{{ case_id }}/">
-    <button>Open Chat</button>
-</a>
+        <p class="text-muted mb-4">
+            Thank you for speaking up. Your report has been received securely.
+        </p>
 
-<a href="/timeline/{{ case_id }}/">
-    <button>View Timeline</button>
-</a>
+        <!-- Case ID -->
+        <div class="case-id-box mb-3">
+            Case ID: {{ case_id }}
+        </div>
 
-<br><br>
+        <p class="helper-text mb-4">
+            Please save this ID to track your report status.
+        </p>
 
-<a href="/">Submit Another Report</a>
+        <!-- Buttons -->
+        <div class="d-grid gap-3">
+            <a href="/chat/{{ case_id }}/" class="btn primary-btn text-white">
+                Open Chat
+            </a>
+
+            <a href="/timeline/{{ case_id }}/" class="btn btn-outline-secondary outline-btn">
+                View Timeline
+            </a>
+
+            <a href="/report/" class="text-decoration-none mt-2">
+                Submit Another Report
+            </a>
+        </div>
+
+    </div>
+</div>
 
 </body>
 </html>
