@@ -513,10 +513,13 @@ def notifications(request):
         "notes": notes
     })
 
-@staff_member_required
 def trigger_sos(request, case_id):
 
     report = get_object_or_404(Report, case_id=case_id)
+
+    # Prevent double trigger
+    if report.is_emergency:
+        return redirect('case_detail', case_id=case_id)
 
     # Mark as emergency
     report.is_emergency = True
@@ -537,33 +540,7 @@ def trigger_sos(request, case_id):
         note="SOS button pressed"
     )
 
-    # Send Emergency Email
-    if getattr(report, "email", None):
-
-        subject = "🚨 EMERGENCY ALERT - SafeVoice"
-
-        message = f"""
-URGENT ALERT
-
-Case ID: {report.case_id}
-Status: EMERGENCY
-Severity: HIGH
-Location: {report.location}
-
-Immediate action required.
-
-SafeVoice System
-"""
-
-        send_mail(
-            subject,
-            message,
-            settings.EMAIL_HOST_USER,
-            [report.email],
-            fail_silently=False,
-        )
-
-    return redirect("/dashboard/")
+    return redirect('case_detail', case_id=case_id)
 
 def download_pdf(request, case_id):
 
